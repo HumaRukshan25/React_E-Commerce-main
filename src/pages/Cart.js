@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart, delCart } from "../redux/action";
@@ -7,6 +7,19 @@ import { Link } from "react-router-dom";
 const Cart = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
+
+  // Load cart items from localStorage on component mount
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (savedCart.length > 0) {
+      savedCart.forEach((item) => dispatch(addCart(item)));
+    }
+  }, [dispatch]);
+
+  // Save cart items to localStorage whenever the cart state changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(state));
+  }, [state]);
 
   const EmptyCart = () => {
     return (
@@ -26,6 +39,7 @@ const Cart = () => {
   const addItem = (product) => {
     dispatch(addCart(product));
   };
+
   const removeItem = (product) => {
     dispatch(delCart(product));
   };
@@ -34,15 +48,18 @@ const Cart = () => {
     let subtotal = 0;
     let shipping = 30.0;
     let totalItems = 0;
-    state.map((item) => {
-      return (subtotal += item.price * item.qty);
+
+    state.forEach((item) => {
+      subtotal += item.price * item.qty;
     });
 
-    state.map((item) => {
-      return (totalItems += item.qty);
+    state.forEach((item) => {
+      totalItems += item.qty;
     });
+
     return (
       <>
+        {/* ... rest of your ShowCart component code ... */}
         <section className="h-100 gradient-custom">
           <div className="container py-5">
             <div className="row d-flex justify-content-center my-4">
@@ -166,7 +183,7 @@ const Cart = () => {
       <Navbar />
       <div className="container my-3 py-3">
         <h1 className="text-center">Cart</h1>
-        <hr />
+        
         {state.length > 0 ? <ShowCart /> : <EmptyCart />}
       </div>
       <Footer />
