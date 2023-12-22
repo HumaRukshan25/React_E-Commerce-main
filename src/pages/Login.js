@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { Footer, Navbar } from '../components';
 
 const Login = () => {
@@ -27,14 +27,16 @@ const Login = () => {
     let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAjkC3wHbJfwQ8oFNNeFt5u76ibKOAFyHo';
 
     setIsLoading(true);
-
+   
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(authData),
+      
     })
+    
       .then((res) => {
         setIsLoading(false);
 
@@ -53,8 +55,10 @@ const Login = () => {
       })
       .then((data) => {
         console.log(data);
+        window.location.href = 'http://localhost:3000/Product';
         // Handle successful authentication, e.g., redirect to another page
       })
+      
       .catch((err) => {
         alert(err.message);
       });
