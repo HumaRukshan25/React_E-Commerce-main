@@ -10,9 +10,13 @@ const Cart = () => {
 
   // Load cart items from localStorage on component mount
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (savedCart.length > 0) {
-      savedCart.forEach((item) => dispatch(addCart(item)));
+    try {
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (savedCart.length > 0) {
+        savedCart.forEach((item) => dispatch(addCart(item)));
+      }
+    } catch (error) {
+      console.error("Error parsing localStorage:", error);
     }
   }, [dispatch]);
 
@@ -20,6 +24,10 @@ const Cart = () => {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(state));
   }, [state]);
+
+  // ... rest of your code
+
+
 
   const EmptyCart = () => {
     return (
